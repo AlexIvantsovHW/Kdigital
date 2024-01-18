@@ -1,0 +1,27 @@
+.textArea {
+  display: block;
+}
+
+.footer {
+  display: none;
+}
+
+@media print {
+  .footer {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin: 20px;
+  }
+  .subcontainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  .textArea {
+    display: none;
+  }
+}
