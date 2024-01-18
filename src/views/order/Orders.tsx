@@ -38,6 +38,7 @@ import OrderForm from '../../components/OrderForm'
 import { useTypedSelector } from '../../store'
 import { printOrDownloadDoc } from '../../utils'
 import { Viewer, Worker } from '@react-pdf-viewer/core'
+
 import { log, table } from 'console'
 import { Tabs } from '../../typings'
 import { position } from 'html2canvas/dist/types/css/property-descriptors/position'
@@ -192,7 +193,7 @@ const Orders = (): JSX.Element => {
       date_finish: dateTemporary,
     })
   }, [dateTemporary])
-
+  debugger
   useEffect(() => {
     setDataAddOrder({
       ...dataAddOrder,
@@ -503,7 +504,7 @@ const Orders = (): JSX.Element => {
                 width: '450px',
               }}
             >
-              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.5.141/build/pdf.worker.min.js">
+              <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.1741/build/pdf.worker.min.js">
                 <Viewer
                   fileUrl={
                     process.env.REACT_APP_API + dataProtocol?.pictureProtocol

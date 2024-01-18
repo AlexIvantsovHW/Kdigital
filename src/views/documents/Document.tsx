@@ -12,7 +12,7 @@ import {
   CModalFooter,
   CCardHeader,
 } from '@coreui/react-pro'
-import React, { createRef, useEffect, useState } from 'react'
+import React, { createRef, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import DocumentsApi from './Documents.Api'
 import { useParams } from 'react-router-dom'
@@ -24,6 +24,12 @@ import { useTypedSelector } from '../../store'
 import { Viewer, Worker, RenderPageProps } from '@react-pdf-viewer/core'
 import { printOrDownloadDoc } from '../../utils'
 
+import { useReactToPrint } from 'react-to-print'
+import { useRef, useState } from 'react'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
+import s from '../../shared/styles/reports.module.css'
+import { downloadPDF } from '../../shared/functions/globalFunc'
 const CustomPageLayer: React.FC<{
   renderPageProps: RenderPageProps
 }> = ({ renderPageProps }) => {
@@ -68,7 +74,13 @@ const Document = (): JSX.Element => {
       setShowPicture(result.data)
     })
   }
+  const componentRef = useRef<any>()
+  const [loader, setLoader] = useState(false)
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef?.current,
+    documentTitle: 'emp-data',
+  })
   useEffect(() => {
     getDocumentsShow(id)
   }, [id])
@@ -76,10 +88,10 @@ const Document = (): JSX.Element => {
   return (
     <CContainer>
       <CCard>
-        <CCardHeader className="px-4">
+        <CCardHeader className="px-4 contentToPrint">
           <div>{docName}</div>
         </CCardHeader>
-        <CCardBody>
+        <CCardBody ref={componentRef}>
           <div
             style={{
               display: 'flex',
@@ -109,7 +121,7 @@ const Document = (): JSX.Element => {
                       width: '100%',
                     }}
                   >
-                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.5.141/build/pdf.worker.min.js">
+                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                       <Viewer
                         fileUrl={showPicture?.file?.url}
                         renderPage={renderPdfPage}
@@ -133,7 +145,33 @@ const Document = (): JSX.Element => {
               <></>
             )}
           </div>
+          <div className={s.footer}>
+            <div className={s.subcontainer}>
+              <p>ФИО: ____________</p>
+              <p>Подпись: ________</p>
+            </div>
+          </div>
         </CCardBody>
+        <div
+          style={{
+            display: 'flex',
+            gap: '12px',
+            width: '100%',
+            marginLeft: '10px',
+            marginBottom: '10px',
+          }}
+        >
+          <CButton onClick={handlePrint}>Печать</CButton>
+          <CButton
+            className="receipt-modal-download-button"
+            onClick={() => {
+              downloadPDF(componentRef)
+            }}
+            disabled={loader}
+          >
+            {loader ? <span>Процесс загрузки...</span> : <span>Cкачать</span>}
+          </CButton>
+        </div>
       </CCard>
     </CContainer>
   )

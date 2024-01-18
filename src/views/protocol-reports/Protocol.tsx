@@ -147,7 +147,7 @@ const Protocol = (): JSX.Element => {
                             width: '100%',
                           }}
                         >
-                          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.5.141/build/pdf.worker.min.js">
+                          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                             <Viewer
                               fileUrl={showPicture?.file?.url}
                               renderPage={renderPdfPage}
